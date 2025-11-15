@@ -10,3 +10,17 @@ function listFiles() {
   const files = fs.readdirSync(SHARED_FOLDER);
   return files.join("\n") || "(s ka asnjë file)";
 }
+function readFileContent(filename) {
+  const filePath = path.join(SHARED_FOLDER, filename);
+  if (!fs.existsSync(filePath)) {
+    return `ERROR: File ${filename} nuk ekziston`;
+  }
+  const data = fs.readFileSync(filePath, "utf8");
+  return data;
+}
+function saveUploadedFile(filename, base64Data) {
+  const filePath = path.join(SHARED_FOLDER, filename);
+  const buffer = Buffer.from(base64Data, "base64");
+  fs.writeFileSync(filePath, buffer);
+  return `OK: File ${filename} u ruajt në server`;
+}
