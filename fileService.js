@@ -24,3 +24,31 @@ function saveUploadedFile(filename, base64Data) {
   fs.writeFileSync(filePath, buffer);
   return `OK: File ${filename} u ruajt në server`;
 }
+
+function getFileForDownload(filename) {
+  const filePath = path.join(SHARED_FOLDER, filename);
+  if (!fs.existsSync(filePath)) {
+    return { error: `ERROR: File ${filename} nuk ekziston` };
+  }
+  const buffer = fs.readFileSync(filePath);
+  const base64 = buffer.toString("base64");
+  return { filename, base64 };
+}
+
+function deleteFile(filename) {
+  const filePath = path.join(SHARED_FOLDER, filename);
+  if (!fs.existsSync(filePath)) {
+    return `ERROR: File ${filename} nuk ekziston`;
+  }
+  fs.unlinkSync(filePath);
+  return `OK: File ${filename} u fshi`;
+}
+
+function searchFiles(keyword) {
+  const files = fs.readdirSync(SHARED_FOLDER);
+  const matched = files.filter((f) => f.includes(keyword));
+  if (matched.length === 0) {
+    return `S'u gjet asnjë file me fjalë kyçe "${keyword}"`;
+  }
+  return matched.join("\n");
+}
